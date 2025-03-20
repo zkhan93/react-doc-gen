@@ -11,7 +11,7 @@ const mkdirAsync = mkdir;
 const writeFileAsync = writeFile;
 const readFileAsync = readFile;
 
-const openaiModelName = "gpt-3.5-turbo"; // or another appropriate model
+let openaiModelName = "gpt-3.5-turbo"; // or another appropriate model
 
 // Cache directory for component documentation
 

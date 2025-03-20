@@ -1,15 +1,15 @@
 {
-  "name": "react-doc-gen",
+  "name": "react-docai",
   "private": false,
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "A tool to generate JSDoc documentation for React components using OpenAI",
   "main": "src/index.js",
   "bin": {
-    "react-doc-gen": "./bin/react-doc-gen.js"
+    "react-docai": "./bin/react-docai.js"
   },
   "type": "module",
   "scripts": {
-    "start": "./bin/react-doc-gen.js",
+    "start": "./bin/react-docai.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
