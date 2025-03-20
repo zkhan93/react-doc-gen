@@ -1,0 +1,41 @@
+{
+  "name": "react-doc-gen",
+  "private": false,
+  "version": "1.0.11",
+  "description": "A tool to generate JSDoc documentation for React components using OpenAI",
+  "main": "src/index.js",
+  "bin": {
+    "react-doc-gen": "./bin/react-doc-gen.js"
+  },
+  "type": "module",
+  "scripts": {
+    "start": "./bin/react-doc-gen.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "react",
+    "documentation",
+    "jsdoc",
+    "openai",
+    "ai",
+    "component"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zkhan93/react-doc-gen"
+  },
+  "author": "zkhan1093@gmail.com",
+  "license": "MIT",
+  "dependencies": {
+    "@babel/parser": "^7.23.0",
+    "@babel/traverse": "^7.23.0",
+    "@babel/types": "^7.23.0",
+    "minimatch": "^9.0.3",
+    "openai": "^4.20.0",
+    "yargs": "^17.7.2"
+  },
+  "files": [
+    "bin/",
+    "src/"
+  ]
+}
