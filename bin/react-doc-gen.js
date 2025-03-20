@@ -26,6 +26,11 @@ const argv = yargs(hideBin(process.argv))
     alias: 'k',
     describe: 'OpenAI API Key (or set OPENAI_API_KEY environment variable)'
   })
+  .option('openai-model', {
+    alias: 'm',
+    describe: 'OpenAI GPT-3 model ID',
+    default: 'gpt-3.5-turbo'
+  })
   .option('rate-limit', {
     alias: 'r',
     describe: 'Maximum number of OpenAI API requests per minute',
@@ -78,6 +83,10 @@ if (argv['openai-key']) {
   process.env.OPENAI_API_KEY = argv['openai-key'];
 }
 
+if (argv['openai-model']) {
+  process.env.OPENAI_MODEL = argv['openai-model'];
+}
+
 /**
  * Main function that orchestrates the entire process
  */
@@ -92,7 +101,7 @@ async function main() {
     }
     
     // Initialize OpenAI client if API key is available
-    const openaiClient = setupOpenAI();
+    const openaiClient = setupOpenAI()
     if (!openaiClient) {
       console.warn('WARNING: OpenAI API key not found. Will use basic docstring generation.');
       console.warn('Set your API key with --openai-key flag or OPENAI_API_KEY environment variable.');

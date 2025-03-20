@@ -5,13 +5,13 @@ import fs from 'fs';
 import { readFile, writeFile, mkdir } from 'fs/promises';
 import path from 'path';
 import crypto from 'crypto';
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
 
 
 const mkdirAsync = mkdir;
 const writeFileAsync = writeFile;
 const readFileAsync = readFile;
+
+const openaiModelName = "gpt-3.5-turbo"; // or another appropriate model
 
 // Cache directory for component documentation
 
@@ -28,11 +28,15 @@ const CACHE_DIR = path.join(projectRoot, '.react-doc-gen');
 function setupOpenAI() {
   // Ensure cache directory exists
   ensureCacheDirectory();
-  
+
   if (!process.env.OPENAI_API_KEY) {
     return null;
   }
-  
+
+  if (process.env.OPENAI_MODEL) {
+    openaiModelName = process.env.OPENAI_MODEL
+  }
+
   return new openai.OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
   });
@@ -46,7 +50,7 @@ async function ensureCacheDirectory() {
     if (!fs.existsSync(CACHE_DIR)) {
       await mkdirAsync(CACHE_DIR, { recursive: true });
       console.log(`Created documentation cache directory: ${CACHE_DIR}`);
-    }else{
+    } else {
       console.log(`Documentation cache directory already exists: ${CACHE_DIR}`);
     }
   } catch (error) {
@@ -133,17 +137,21 @@ async function generateDocStringWithOpenAI(openaiClient, componentName, filePath
   if (!openaiClient) {
     throw new Error('OpenAI client not initialized');
   }
-  
+  if (!componentCode) {
+    console.error(`No component code found for ${componentName}`);
+    return generateBasicDocString(componentName, filePath, location, componentType);
+  }
+
   // Calculate component hash
   const componentHash = calculateComponentHash(componentCode);
-  
+
   // Check if we have cached documentation for this component
   const cachedDoc = await loadDocFromCache(componentHash);
   if (cachedDoc) {
     console.log(`Using cached documentation for ${componentName}`);
     return cachedDoc;
   }
-  
+
   try {
     // Create a prompt that asks the model to analyze the component
     const prompt = `
@@ -169,7 +177,7 @@ Your response should be a JSON object with a single field 'docstring' containing
 
     // Call the OpenAI API with JSON response format
     const response = await openaiClient.chat.completions.create({
-      model: "gpt-3.5-turbo", // or another appropriate model
+      model: openaiModelName, // or another appropriate model
       messages: [
         { role: "system", content: "You are a React documentation specialist who writes precise and helpful JSDoc comments." },
         { role: "user", content: prompt }
@@ -183,22 +191,22 @@ Your response should be a JSON object with a single field 'docstring' containing
     const responseContent = response.choices[0].message.content;
     const parsedResponse = JSON.parse(responseContent);
     let docstring = parsedResponse.docstring.trim();
-    
+
     // Make sure it starts with /** if it doesn't already
     if (!docstring.startsWith('/**')) {
       docstring = `/**${docstring.startsWith('*') ? '' : '\n *'} ${docstring}`;
     }
-    
+
     // Make sure it ends with */ if it doesn't already
     if (!docstring.endsWith('*/')) {
       docstring = `${docstring}\n */`;
     }
-    
+
     // Cache the generated docstring
     await saveDocToCache(componentHash, docstring);
-    
+
     return docstring;
-    
+
   } catch (error) {
     console.error('Error generating documentation with OpenAI:', error);
     throw error;

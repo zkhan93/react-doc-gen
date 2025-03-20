@@ -32,7 +32,7 @@ export OPENAI_API_KEY=your-api-key-here
 Run the tool on your React project:
 
 ```bash
-node component-doc-generator.js /path/to/your/project
+npm run start -- /path/to/your/project
 ```
 
 The tool will:
@@ -48,6 +48,8 @@ Options:
                                              [default: "extracted_components"]
   --verbose, -v         Enable verbose logging      [boolean] [default: false]
   --openai-key, -k      OpenAI API Key (or set OPENAI_API_KEY environment variable)
+  --openai-model, -m    OpenAI model to use for documentation generation
+                                      [string] [default: "gpt-3.5-turbo"]
   --rate-limit, -r      Maximum number of OpenAI API requests per minute
                                                           [number] [default: 10]
   --dry-run, -d         Generate docstrings but don't write to files
@@ -68,7 +70,7 @@ Options:
 Preview documentation without modifying files:
 
 ```bash
-node component-doc-generator.js /path/to/your/project --dry-run
+npm run start -- /path/to/your/project --dry-run
 ```
 
 ### Update Existing Documentation
@@ -76,7 +78,7 @@ node component-doc-generator.js /path/to/your/project --dry-run
 Replace existing JSDoc comments:
 
 ```bash
-node component-doc-generator.js /path/to/your/project --update-existing
+npm run start -- /path/to/your/project --update-existing
 ```
 
 ### Skip Components with Existing Documentation
@@ -84,7 +86,7 @@ node component-doc-generator.js /path/to/your/project --update-existing
 Only document components that don't already have JSDoc comments:
 
 ```bash
-node component-doc-generator.js /path/to/your/project --skip-existing
+npm run start -- /path/to/your/project --skip-existing
 ```
 
 ### Control Batch Size
@@ -92,7 +94,7 @@ node component-doc-generator.js /path/to/your/project --skip-existing
 Adjust the number of components processed concurrently:
 
 ```bash
-node component-doc-generator.js /path/to/your/project --batch-size 10
+npm run start -- /path/to/your/project --batch-size 10
 ```
 
 ### Limit API Requests
@@ -100,7 +102,7 @@ node component-doc-generator.js /path/to/your/project --batch-size 10
 For stricter API limits:
 
 ```bash
-node component-doc-generator.js /path/to/your/project --rate-limit 5
+npm run start -- /path/to/your/project --rate-limit 5
 ```
 
 ## How It Works
